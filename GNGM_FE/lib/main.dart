@@ -15,10 +15,14 @@ class GNGMApp extends StatelessWidget {
     return MaterialApp(
       title: 'GNGM',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: GNGMColors.trustBlue,
+        primarySwatch: Colors.orange,
+        primaryColor: GNGMColors.primary,
         scaffoldBackgroundColor: GNGMColors.backgroundColor,
-        fontFamily: GNGMTextStyles.fontFamily,
+        fontFamily: GNGMTextStyles.fontFamilyBase,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: GNGMColors.primary,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: const MainScreen(),

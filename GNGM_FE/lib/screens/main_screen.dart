@@ -35,22 +35,39 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      color: GNGMColors.trustBlue,
+      decoration: BoxDecoration(
+        color: GNGMColors.primary,
+        boxShadow: [
+          BoxShadow(
+            color: GNGMColors.primary.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.home,
-                color: GNGMColors.cleanWhite,
-                size: 24,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: GNGMColors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.home_rounded,
+                  color: GNGMColors.white,
+                  size: 24,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 'GNGM',
-                style: GNGMTextStyles.headlineMedium.copyWith(
-                  color: GNGMColors.cleanWhite,
+                style: GNGMTextStyles.brandLarge.copyWith(
+                  color: GNGMColors.white,
+                  fontSize: 24,
                 ),
               ),
             ],
@@ -59,16 +76,32 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.notifications_outlined,
-                  color: GNGMColors.cleanWhite,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: GNGMColors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.notifications_outlined,
+                    color: GNGMColors.white,
+                    size: 20,
+                  ),
                 ),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.person_outline,
-                  color: GNGMColors.cleanWhite,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: GNGMColors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.person_outline,
+                    color: GNGMColors.white,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
@@ -84,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: GNGMColors.lightGray,
+          color: GNGMColors.primaryPale,
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(20),
             bottomRight: Radius.circular(20),
@@ -99,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                   Icon(
                     Icons.map_outlined,
                     size: 80,
-                    color: GNGMColors.softGray,
+                    color: GNGMColors.primarySubtle,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -120,10 +153,10 @@ class _MainScreenState extends State<MainScreen> {
               right: 20,
               child: FloatingActionButton.small(
                 onPressed: () {},
-                backgroundColor: GNGMColors.cleanWhite,
+                backgroundColor: GNGMColors.white,
                 child: Icon(
                   Icons.my_location,
-                  color: GNGMColors.trustBlue,
+                  color: GNGMColors.primary,
                 ),
               ),
             ),
@@ -138,11 +171,15 @@ class _MainScreenState extends State<MainScreen> {
       padding: const EdgeInsets.all(20),
       child: Container(
         decoration: BoxDecoration(
-          color: GNGMColors.cleanWhite,
+          color: GNGMColors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: GNGMColors.primarySubtle,
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: GNGMColors.primary.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -157,14 +194,14 @@ class _MainScreenState extends State<MainScreen> {
             ),
             prefixIcon: Icon(
               Icons.search,
-              color: GNGMColors.warmOrange,
+              color: GNGMColors.primary,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: GNGMColors.cleanWhite,
+            fillColor: GNGMColors.white,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 16,
@@ -228,8 +265,9 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Text(
               '내 주변 요청',
-              style: GNGMTextStyles.headlineMedium.copyWith(
-                fontWeight: FontWeight.bold,
+              style: GNGMTextStyles.brandMedium.copyWith(
+                fontSize: 20,
+                color: GNGMColors.primaryText,
               ),
             ),
             const SizedBox(height: 16),
