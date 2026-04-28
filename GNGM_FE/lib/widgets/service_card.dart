@@ -32,11 +32,15 @@ class ServiceCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: GNGMColors.cleanWhite,
+          color: GNGMColors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: GNGMColors.primarySubtle,
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: GNGMColors.primary.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -49,11 +53,11 @@ class ServiceCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: GNGMColors.trustBlue,
+                  backgroundColor: GNGMColors.primary,
                   child: Text(
                     userName[0],
                     style: GNGMTextStyles.bodyLarge.copyWith(
-                      color: GNGMColors.cleanWhite,
+                      color: GNGMColors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -74,7 +78,7 @@ class ServiceCard extends StatelessWidget {
                           Icon(
                             Icons.star,
                             size: 16,
-                            color: GNGMColors.warmOrange,
+                            color: GNGMColors.warning,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -129,16 +133,16 @@ class ServiceCard extends StatelessWidget {
               children: [
                 Text(
                   '수고비: $price',
-                  style: GNGMTextStyles.bodyLarge.copyWith(
-                    color: GNGMColors.warmOrange,
+                  style: GNGMTextStyles.brandMedium.copyWith(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 ElevatedButton(
                   onPressed: onContact,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: GNGMColors.trustBlue,
-                    foregroundColor: GNGMColors.cleanWhite,
+                    backgroundColor: GNGMColors.primary,
+                    foregroundColor: GNGMColors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -146,8 +150,12 @@ class ServiceCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 0,
                   ),
-                  child: const Text('연락하기'),
+                  child: Text(
+                    '연락하기',
+                    style: GNGMTextStyles.buttonTextPrimary,
+                  ),
                 ),
               ],
             ),
