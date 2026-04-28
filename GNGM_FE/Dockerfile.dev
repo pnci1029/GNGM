@@ -1,0 +1,21 @@
+FROM ghcr.io/cirruslabs/flutter:stable
+
+WORKDIR /app
+
+# Flutter 권한 설정
+RUN flutter config --no-analytics
+RUN flutter doctor
+
+# pubspec 파일 복사 및 의존성 설치
+COPY pubspec*.yaml ./
+RUN flutter pub get
+
+# 소스 코드 복사
+COPY . .
+
+# 웹 빌드를 위한 설정
+RUN flutter config --enable-web
+
+EXPOSE 3000
+
+CMD ["flutter", "run", "-d", "web-server", "--web-port", "3000", "--web-hostname", "0.0.0.0", "--release"]
