@@ -21,11 +21,15 @@ class CategoryItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: GNGMColors.cleanWhite,
+          color: GNGMColors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: GNGMColors.primarySubtle,
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: GNGMColors.primary.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -37,7 +41,7 @@ class CategoryItem extends StatelessWidget {
             Icon(
               icon,
               size: 32,
-              color: GNGMColors.trustBlue,
+              color: GNGMColors.primary,
             ),
             const SizedBox(height: 8),
             Text(
