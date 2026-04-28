@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./GNGM_BE
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - gngm-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./GNGM_FE
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - gngm-network
+    restart: unless-stopped
+
+networks:
+  gngm-network:
+    driver: bridge
