@@ -137,13 +137,17 @@ class _MainScreenState extends State<MainScreen> {
                   const SizedBox(height: 16),
                   Text(
                     '내 주변 서비스',
-                    style: GNGMTextStyles.bodyLarge.copyWith(
+                    style: GNGMTextStyles.brandLarge.copyWith(
                       color: GNGMColors.secondaryText,
+                      fontSize: 28,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   Text(
-                    '지도가 여기에 표시됩니다',
-                    style: GNGMTextStyles.bodyMedium,
+                    '가는김에, 우리 함께',
+                    style: GNGMTextStyles.brandMedium.copyWith(
+                      color: GNGMColors.secondaryText,
+                    ),
                   ),
                 ],
               ),
