@@ -9,7 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "sync": "node ../sync-secrets.js",
+    "secrets:status": "node ../sync-secrets.js status"
   },
   "keywords": [],
   "author": "",
