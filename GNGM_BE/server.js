@@ -4,8 +4,19 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
 
+// Import database models
+const { sequelize } = require('./src/models');
+
+// Validate required environment variables
+const requiredVars = ['PORT', 'NODE_ENV'];
+const missingVars = requiredVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+}
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT, 10);
 
 // Middleware
 app.use(helmet());
@@ -38,7 +49,28 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 GNGM Server is running on port ${PORT}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// Database connection and server start
+const startServer = async () => {
+  try {
+    // Test database connection
+    await sequelize.authenticate();
+    console.log('✅ Database connection established successfully');
+
+    // Sync database models (development only)
+    if (process.env.NODE_ENV === 'development') {
+      await sequelize.sync({ alter: true });
+      console.log('📊 Database models synchronized');
+    }
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`🚀 GNGM Server is running on port ${PORT}`);
+      console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+    });
+  } catch (error) {
+    console.error('❌ Unable to connect to database:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
