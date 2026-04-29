@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'colors.dart';
 
 class GNGMTextStyles {
-  // Font Families
-  static const String fontFamilySignature = 'Gamja Flower';       // 감자꽃 (구글 폰트, 귀여운 손글씨)
-  static const String fontFamilyBase = 'Noto Sans KR';            // 노토 산스 (구글 폰트)
+  // Font Families - 3가지 샘플
+  static const String fontDoHyeon = 'Do Hyeon';                   // 도현체 (모던하고 친근함)
+  static const String fontJua = 'Jua';                           // 주아체 (둥글고 귀여움)  
+  static const String fontSunflower = 'Sunflower';               // 해바라기체 (깔끔하고 모던)
+  static const String fontFamilyBase = 'Noto Sans KR';           // 노토 산스 (본문용)
   
   // Text Sizes
   static const double textBrand = 28.0;  // 브랜드 로고, 타이틀
@@ -14,18 +17,30 @@ class GNGMTextStyles {
   static const double textSM = 14.0;     // 보조 정보
   static const double textXS = 12.0;     // 캡션
   
-  // Brand Styles (HyangSoo)
-  static const TextStyle brandLarge = TextStyle(
-    fontFamily: fontFamilySignature,
+  // Brand Styles - 3가지 샘플 (Google Fonts 사용)
+  static TextStyle brandLarge1 = GoogleFonts.doHyeon(
     fontSize: textBrand,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.normal,
     color: GNGMColors.primary,
   );
   
-  static const TextStyle brandMedium = TextStyle(
-    fontFamily: fontFamilySignature,
+  static TextStyle brandLarge2 = GoogleFonts.jua(
+    fontSize: textBrand,
+    fontWeight: FontWeight.normal,
+    color: GNGMColors.primary,
+  );
+  
+  static TextStyle brandLarge3 = GoogleFonts.sunflower(
+    fontSize: textBrand,
+    fontWeight: FontWeight.w500,
+    color: GNGMColors.primary,
+  );
+  
+  // 현재 적용중 (주아체)
+  static TextStyle brandLarge = brandLarge2;
+  static TextStyle brandMedium = GoogleFonts.jua(
     fontSize: textLG,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.normal,
     color: GNGMColors.primary,
   );
   
