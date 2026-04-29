@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+GNGM_BE/node_modules/
+GNGM_FE/.dart_tool/
+GNGM_FE/.packages
+GNGM_FE/pubspec.lock
+
+# Build outputs
+GNGM_BE/dist/
+GNGM_BE/build/
+GNGM_FE/build/
+GNGM_FE/.flutter-plugins
+GNGM_FE/.flutter-plugins-dependencies
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and Environment Files (IMPORTANT!)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+**/app_secrets.dart
+../playground/
+playground/
+sync-secrets.js
+
+# Sensitive Configuration
+config/secrets.js
+src/config/secrets.js
+lib/core/constants/app_secrets.dart
+
+# Docker
+.docker/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
