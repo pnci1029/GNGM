@@ -114,15 +114,32 @@ node sync-secrets.js help       # 도움말 표시
 
 ## 보안 주의사항
 
-### ✅ 안전한 방법
-- `playground/` 디렉토리는 Git 저장소 밖에 위치
-- 실제 시크릿 값은 절대 Git에 커밋하지 않음
-- `.env`와 `app_secrets.dart`는 `.gitignore`에 포함됨
+### ✅ 반드시 지켜야 할 규칙
+- **환경변수만 사용**: 모든 설정 정보는 process.env에서만 가져오기
+- **하드코딩 금지**: `||` 연산자로 기본값 노출 절대 금지
+- **필수 검증**: 환경변수 누락 시 애플리케이션 시작 실패하도록 구현
+- **playground 분리**: Git 저장소 밖에 시크릿 정보 보관
+- **.gitignore 완전성**: 모든 민감 파일 경로 차단
 
-### ❌ 피해야 할 것
-- 시크릿 파일을 Git에 추가하지 말 것
-- 코드에 하드코딩하지 말 것
-- 공개 채널에서 시크릿 정보 공유하지 말 것
+### ❌ 절대 금지사항
+```javascript
+// ❌ 잘못된 예시 - 하드코딩 노출
+const PORT = process.env.PORT || 3000;
+const DB_HOST = process.env.DB_HOST || 'localhost';
+
+// ✅ 올바른 예시 - 환경변수만 사용
+if (!process.env.PORT) {
+  throw new Error('Missing required environment variable: PORT');
+}
+const PORT = parseInt(process.env.PORT, 10);
+```
+
+### 🚨 코딩 규칙 (필수 준수)
+1. **환경변수 검증 필수**: 모든 설정 파일에서 필수 환경변수 존재 여부 확인
+2. **기본값 금지**: `||` 연산자로 기본값 제공 금지
+3. **타입 변환**: 숫자형 환경변수는 반드시 parseInt() 사용
+4. **에러 처리**: 환경변수 누락 시 명확한 에러 메시지와 함께 종료
+5. **문서화**: 새로운 환경변수 추가 시 반드시 playground 템플릿 업데이트
 
 ## 개발 환경별 설정
 
