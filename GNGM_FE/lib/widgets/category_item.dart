@@ -21,15 +21,15 @@ class CategoryItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: GNGMColors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: GNGMColors.primarySubtle,
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: GNGMColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -41,13 +41,13 @@ class CategoryItem extends StatelessWidget {
             Icon(
               icon,
               size: 32,
-              color: GNGMColors.primary,
+              color: AppColors.primary,
             ),
             const SizedBox(height: 8),
             Text(
               title,
-              style: GNGMTextStyles.bodyMedium.copyWith(
-                color: GNGMColors.primaryText,
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,

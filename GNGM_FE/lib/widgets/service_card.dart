@@ -32,15 +32,15 @@ class ServiceCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: GNGMColors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: GNGMColors.primarySubtle,
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: GNGMColors.primary.withOpacity(0.08),
+              color: AppColors.primary.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -53,11 +53,11 @@ class ServiceCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: GNGMColors.primary,
+                  backgroundColor: AppColors.primary,
                   child: Text(
                     userName[0],
-                    style: GNGMTextStyles.bodyLarge.copyWith(
-                      color: GNGMColors.white,
+                    style: AppTextStyles.subtitle.copyWith(
+                      color: AppColors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -69,7 +69,7 @@ class ServiceCard extends StatelessWidget {
                     children: [
                       Text(
                         userName,
-                        style: GNGMTextStyles.bodyLarge.copyWith(
+                        style: AppTextStyles.subtitle.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -78,13 +78,13 @@ class ServiceCard extends StatelessWidget {
                           Icon(
                             Icons.star,
                             size: 16,
-                            color: GNGMColors.warning,
+                            color: AppColors.warning,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             rating.toString(),
-                            style: GNGMTextStyles.bodySmall.copyWith(
-                              color: GNGMColors.secondaryText,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -97,7 +97,7 @@ class ServiceCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: GNGMTextStyles.bodyLarge.copyWith(
+              style: AppTextStyles.subtitle.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -107,23 +107,23 @@ class ServiceCard extends StatelessWidget {
                 Icon(
                   Icons.location_on_outlined,
                   size: 16,
-                  color: GNGMColors.secondaryText,
+                  color: AppColors.textSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   location,
-                  style: GNGMTextStyles.bodyMedium,
+                  style: AppTextStyles.body,
                 ),
                 const SizedBox(width: 16),
                 Icon(
                   Icons.access_time,
                   size: 16,
-                  color: GNGMColors.secondaryText,
+                  color: AppColors.textSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   time,
-                  style: GNGMTextStyles.bodyMedium,
+                  style: AppTextStyles.body,
                 ),
               ],
             ),
@@ -133,7 +133,7 @@ class ServiceCard extends StatelessWidget {
               children: [
                 Text(
                   '수고비: $price',
-                  style: GNGMTextStyles.brandMedium.copyWith(
+                  style: AppTextStyles.subtitle.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -141,8 +141,8 @@ class ServiceCard extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onContact,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: GNGMColors.primary,
-                    foregroundColor: GNGMColors.white,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -154,7 +154,7 @@ class ServiceCard extends StatelessWidget {
                   ),
                   child: Text(
                     '연락하기',
-                    style: GNGMTextStyles.buttonTextPrimary,
+                    style: AppTextStyles.button,
                   ),
                 ),
               ],
