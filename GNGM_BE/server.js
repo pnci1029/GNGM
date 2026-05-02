@@ -10,6 +10,8 @@ const { sequelize } = require('./src/models');
 
 // Import routes
 const authRoutes = require('./src/routes/auth.routes');
+const serviceRequestRoutes = require('./src/routes/serviceRequest.routes');
+const serviceOfferRoutes = require('./src/routes/serviceOffer.routes');
 
 // Validate required environment variables
 const requiredVars = ['PORT', 'NODE_ENV'];
@@ -47,6 +49,8 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/requests', serviceRequestRoutes);
+app.use('/api/v1/offers', serviceOfferRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
