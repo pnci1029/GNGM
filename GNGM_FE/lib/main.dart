@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'constants/colors.dart';
 import 'constants/text_styles.dart';
-import 'screens/main_screen.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/category/category_screen.dart';
+import 'screens/request/request_detail_screen.dart';
+import 'screens/request/create_request_screen.dart';
 
 void main() {
   runApp(const GNGMApp());
@@ -15,17 +18,35 @@ class GNGMApp extends StatelessWidget {
     return MaterialApp(
       title: 'GNGM',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        primaryColor: GNGMColors.primary,
-        scaffoldBackgroundColor: GNGMColors.backgroundColor,
-        fontFamily: GNGMTextStyles.fontFamilyBase,
+        primaryColor: AppColors.primary,
+        scaffoldBackgroundColor: AppColors.background,
+        fontFamily: 'Pretendard',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: GNGMColors.primary,
+          seedColor: AppColors.primary,
           brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: const HomeScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/create-request': (context) => const CreateRequestScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/category') {
+          final categoryType = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (context) => CategoryScreen(categoryType: categoryType),
+          );
+        }
+        if (settings.name == '/request-detail') {
+          final requestId = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (context) => RequestDetailScreen(requestId: requestId),
+          );
+        }
+        return null;
+      },
       debugShowCheckedModeBanner: false,
     );
   }

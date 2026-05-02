@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GNGMColors.backgroundColor,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -36,10 +36,10 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: GNGMColors.primary,
+        color: AppColors.primary,
         boxShadow: [
           BoxShadow(
-            color: GNGMColors.primary.withOpacity(0.2),
+            color: AppColors.primary.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -53,20 +53,20 @@ class _MainScreenState extends State<MainScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: GNGMColors.white.withOpacity(0.2),
+                  color: AppColors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.home_rounded,
-                  color: GNGMColors.white,
+                  color: AppColors.white,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 'GNGM',
-                style: GNGMTextStyles.brandLarge.copyWith(
-                  color: GNGMColors.white,
+                style: AppTextStyles.brandTitle.copyWith(
+                  color: AppColors.white,
                   fontSize: 24,
                 ),
               ),
@@ -79,12 +79,12 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: GNGMColors.white.withOpacity(0.2),
+                    color: AppColors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.notifications_outlined,
-                    color: GNGMColors.white,
+                    color: AppColors.white,
                     size: 20,
                   ),
                 ),
@@ -94,12 +94,12 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: GNGMColors.white.withOpacity(0.2),
+                    color: AppColors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.person_outline,
-                    color: GNGMColors.white,
+                    color: AppColors.white,
                     size: 20,
                   ),
                 ),
@@ -117,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: GNGMColors.primaryPale,
+          color: AppColors.primaryPale,
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(20),
             bottomRight: Radius.circular(20),
@@ -132,21 +132,21 @@ class _MainScreenState extends State<MainScreen> {
                   Icon(
                     Icons.map_outlined,
                     size: 80,
-                    color: GNGMColors.primarySubtle,
+                    color: AppColors.border,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     '내 주변 서비스',
-                    style: GNGMTextStyles.brandLarge.copyWith(
-                      color: GNGMColors.secondaryText,
+                    style: AppTextStyles.brandTitle.copyWith(
+                      color: AppColors.textSecondary,
                       fontSize: 28,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '가는김에, 우리 함께',
-                    style: GNGMTextStyles.brandMedium.copyWith(
-                      color: GNGMColors.secondaryText,
+                    style: AppTextStyles.title.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -157,10 +157,10 @@ class _MainScreenState extends State<MainScreen> {
               right: 20,
               child: FloatingActionButton.small(
                 onPressed: () {},
-                backgroundColor: GNGMColors.white,
+                backgroundColor: AppColors.white,
                 child: Icon(
                   Icons.my_location,
-                  color: GNGMColors.primary,
+                  color: AppColors.primary,
                 ),
               ),
             ),
@@ -175,15 +175,15 @@ class _MainScreenState extends State<MainScreen> {
       padding: const EdgeInsets.all(20),
       child: Container(
         decoration: BoxDecoration(
-          color: GNGMColors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: GNGMColors.primarySubtle,
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: GNGMColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -192,20 +192,20 @@ class _MainScreenState extends State<MainScreen> {
         child: TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: '어디로 가시나요?',
-            hintStyle: GNGMTextStyles.bodyMedium.copyWith(
-              color: GNGMColors.hintText,
+            textSecondary: '어디로 가시나요?',
+            hintStyle: AppTextStyles.body.copyWith(
+              color: AppColors.textSecondary,
             ),
             prefixIcon: Icon(
               Icons.search,
-              color: GNGMColors.primary,
+              color: AppColors.primary,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: GNGMColors.white,
+            fillColor: AppColors.white,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 16,
@@ -269,9 +269,9 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Text(
               '내 주변 요청',
-              style: GNGMTextStyles.brandMedium.copyWith(
+              style: AppTextStyles.title.copyWith(
                 fontSize: 20,
-                color: GNGMColors.primaryText,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
