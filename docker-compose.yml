@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  database:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./GNGM_BE/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - gngm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gngm_user -d gngm_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   backend:
     build:
       context: ./GNGM_BE
@@ -11,8 +30,16 @@ services:
       - ./GNGM_BE:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
-      - PORT=3000
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - gngm-network
 
@@ -32,3 +59,6 @@ services:
 networks:
   gngm-network:
     driver: bridge
+
+volumes:
+  postgres_data:
