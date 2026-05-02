@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 
-class GNGMColors {
-  // Primary Colors (Ultra Soft Mint Green - 30% more white)
-  static const Color primary = Color(0xFF81C784);       // 메인 브랜드 (매우 연한 그린)
-  static const Color primaryLight = Color(0xFFA5D6A7);  // 밝은 톤
-  static const Color primaryDark = Color(0xFF66BB6A);   // 어두운 톤 (기존 light)
-  static const Color primaryPale = Color(0xFFF8FDF8);   // 매우 연한 톤 (거의 흰색)
-  static const Color primarySubtle = Color(0xFFE8F5E8); // 미묘한 톤 (더 연하게)
+class AppColors {
+  // Primary Colors - 소프트 민트 그린 (연한 초록 계열)
+  static const Color primary = Color(0xFF66BB6A);       // 메인 브랜드 - 소프트 민트 그린
+  static const Color primaryLight = Color(0xFF81C784);  // 밝은 톤 - 라이트 민트
+  static const Color primaryDark = Color(0xFF4CAF50);   // 어두운 톤 - 딥 민트
+  static const Color primaryPale = Color(0xFFF1F8E9);   // 연한 톤 - 페일 민트
   
   // Status Colors
-  static const Color success = Color(0xFF4CAF50);       // 성공
-  static const Color warning = Color(0xFFFF9800);       // 주의
-  static const Color error = Color(0xFFF44336);         // 에러
+  static const Color success = Color(0xFF66BB6A);       // 성공 (메인 컬러와 동일)
+  static const Color warning = Color(0xFFFFB74D);       // 주의 - 소프트 오렌지
+  static const Color error = Color(0xFFE57373);         // 에러 - 소프트 레드
   
-  // Neutral Colors
-  static const Color white = Color(0xFFFFFFFF);         // 순수 화이트
-  static const Color gray50 = Color(0xFFFAFAFA);        // 카드 배경
-  static const Color gray100 = Color(0xFFF5F5F5);       // 구분선
-  static const Color gray400 = Color(0xFFBDBDBD);       // 비활성 텍스트
-  static const Color gray600 = Color(0xFF757575);       // 보조 텍스트
-  static const Color gray900 = Color(0xFF212121);       // 메인 텍스트
+  // 모바일 친화적 Neutral Colors
+  static const Color white = Color(0xFFFFFFFF);         
+  static const Color background = Color(0xFFF8FDF8);    // 매우 연한 민트 배경
+  static const Color surface = Color(0xFFFFFFFF);       
+  static const Color border = Color(0xFFE8F5E8);        // 연한 민트 보더
   
-  // Legacy Support (for easy migration)
-  static const Color backgroundColor = white;
-  static const Color cardBackground = gray50;
-  static const Color surfaceColor = primaryPale;
-  static const Color primaryText = gray900;
-  static const Color secondaryText = gray600;
-  static const Color hintText = gray400;
+  // 모바일 가독성 Text Colors
+  static const Color textPrimary = Color(0xFF2E7D32);   // 메인 텍스트 - 다크 그린
+  static const Color textSecondary = Color(0xFF6C757D); // 보조 텍스트 - 그레이
+  static const Color textDisabled = Color(0xFFADB5BD);  // 비활성 텍스트
+  
+  // 터치 인터랙션
+  static const Color ripple = Color(0x1F66BB6A);        // 터치 리플 효과
+  static const Color pressed = Color(0x0F66BB6A);       // 눌림 상태
+  
+  // 그림자 (모바일 최적화)
+  static const Color shadow = Color(0x0A000000);
 }
