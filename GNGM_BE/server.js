@@ -2,10 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const passport = require('passport');
 require('dotenv').config();
 
 // Import database models
 const { sequelize } = require('./src/models');
+
+// Import routes
+const authRoutes = require('./src/routes/auth.routes');
 
 // Validate required environment variables
 const requiredVars = ['PORT', 'NODE_ENV'];
@@ -25,6 +29,9 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Passport middleware
+app.use(passport.initialize());
+
 // Routes
 app.get('/', (req, res) => {
   res.json({
@@ -37,6 +44,9 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', service: 'GNGM Backend' });
 });
+
+// API Routes
+app.use('/api/v1/auth', authRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
