@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../constants/colors.dart';
 import '../../constants/text_styles.dart';
+import '../../providers/request_provider.dart';
+import '../../models/request.dart';
 
-class RequestDetailScreen extends StatelessWidget {
+class RequestDetailScreen extends StatefulWidget {
   final String requestId;
 
   const RequestDetailScreen({
@@ -11,12 +14,76 @@ class RequestDetailScreen extends StatelessWidget {
   });
 
   @override
+  State<RequestDetailScreen> createState() => _RequestDetailScreenState();
+}
+
+class _RequestDetailScreenState extends State<RequestDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadRequestDetail();
+  }
+
+  void _loadRequestDetail() {
+    final requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    requestProvider.loadRequestById(widget.requestId);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: _buildAppBar(context),
-      body: _buildBody(context),
-      bottomNavigationBar: _buildBottomActions(context),
+      body: Consumer<RequestProvider>(
+        builder: (context, requestProvider, child) {
+          if (requestProvider.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (requestProvider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    requestProvider.error!,
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.error,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _loadRequestDetail,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                    ),
+                    child: const Text('다시 시도'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (requestProvider.selectedRequest == null) {
+            return const Center(
+              child: Text('요청 정보를 찾을 수 없습니다.'),
+            );
+          }
+
+          return _buildBody(context, requestProvider.selectedRequest!);
+        },
+      ),
+      bottomNavigationBar: Consumer<RequestProvider>(
+        builder: (context, requestProvider, child) {
+          if (requestProvider.selectedRequest != null) {
+            return _buildBottomActions(context, requestProvider.selectedRequest!);
+          }
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 
@@ -41,26 +108,26 @@ class RequestDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, Request request) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildMainInfo(),
+          _buildMainInfo(request),
           const SizedBox(height: 24),
-          _buildRequesterInfo(),
+          _buildRequesterInfo(request),
           const SizedBox(height: 24),
-          _buildLocationInfo(),
+          _buildLocationInfo(request),
           const SizedBox(height: 24),
-          _buildDescription(),
+          _buildDescription(request),
           const SizedBox(height: 80),
         ],
       ),
     );
   }
 
-  Widget _buildMainInfo() {
+  Widget _buildMainInfo(Request request) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -86,7 +153,7 @@ class RequestDetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '쇼핑 도움',
+                  _getCategoryTitle(request.categoryType),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w600,
@@ -95,7 +162,7 @@ class RequestDetailScreen extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '5,000원',
+                '${request.feeAmount.toStringAsFixed(0)}원',
                 style: AppTextStyles.brandTitle.copyWith(
                   color: AppColors.primary,
                 ),
@@ -104,7 +171,7 @@ class RequestDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '스타벅스 아메리카노 테이크아웃',
+            request.title,
             style: AppTextStyles.title,
           ),
           const SizedBox(height: 8),
@@ -117,7 +184,7 @@ class RequestDetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                '15분 전 요청',
+                '${_formatTime(request.createdAt)} 요청',
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -129,7 +196,7 @@ class RequestDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRequesterInfo() {
+  Widget _buildRequesterInfo(Request request) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -155,7 +222,7 @@ class RequestDetailScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '김**님',
+                      request.user.name,
                       style: AppTextStyles.body.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -202,7 +269,7 @@ class RequestDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationInfo() {
+  Widget _buildLocationInfo(Request request) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -231,16 +298,17 @@ class RequestDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '스타벅스 강남역점',
+            request.pickupAddress,
             style: AppTextStyles.subtitle,
           ),
           const SizedBox(height: 4),
-          Text(
-            '서울특별시 강남구 강남대로 지하 396',
-            style: AppTextStyles.body.copyWith(
-              color: AppColors.textSecondary,
+          if (request.deliveryAddress != null)
+            Text(
+              request.deliveryAddress!,
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-          ),
           const SizedBox(height: 12),
           Container(
             height: 120,
@@ -273,7 +341,7 @@ class RequestDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(Request request) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -292,7 +360,7 @@ class RequestDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '아메리카노 아이스로 1잔 부탁드려요! 시럽이나 샷 추가 없이 기본으로만 해주시면 됩니다. 카드로 결제하실 수 있게 현금 5000원 드릴게요.',
+            request.description,
             style: AppTextStyles.body.copyWith(
               color: AppColors.textPrimary,
               height: 1.5,
@@ -303,7 +371,7 @@ class RequestDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomActions(BuildContext context) {
+  Widget _buildBottomActions(BuildContext context, Request request) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -342,7 +410,7 @@ class RequestDetailScreen extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: () => _makeOffer(context),
+              onPressed: () => _makeOffer(context, request),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
@@ -399,7 +467,37 @@ class RequestDetailScreen extends StatelessWidget {
     
   }
 
-  void _makeOffer(BuildContext context) {
+  void _makeOffer(BuildContext context, Request request) {
     
+  }
+
+  String _getCategoryTitle(String categoryType) {
+    switch (categoryType) {
+      case 'shopping':
+        return '쇼핑 도움';
+      case 'delivery':
+        return '배송 도움';
+      case 'transport':
+        return '동행 도움';
+      case 'companion':
+        return '기타 도움';
+      default:
+        return '도움 요청';
+    }
+  }
+
+  String _formatTime(DateTime createdAt) {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    
+    if (difference.inMinutes < 1) {
+      return '방금 전';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}분 전';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}시간 전';
+    } else {
+      return '${difference.inDays}일 전';
+    }
   }
 }
