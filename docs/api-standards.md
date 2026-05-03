@@ -403,6 +403,50 @@ module.exports = new UserController();
 
 ## Frontend 구현 가이드
 
+### DTO 패턴 강제 사용 (필수)
+
+**모든 API 요청/응답은 반드시 DTO 클래스를 사용해야 함**
+
+#### DTO 명명 규칙
+```
+요청 DTO: {기능}RequestDto (예: LoginRequestDto, CreateRequestDto)
+응답 DTO: {기능}ResponseDto (예: AuthResponseDto, RequestListResponseDto)
+```
+
+#### DTO 구조 예시
+```dart
+// 요청 DTO
+class LoginRequestDto {
+  final String email;
+  final String password;
+  
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'password': password,
+  };
+}
+
+// 응답 DTO  
+class AuthResponseDto {
+  final String token;
+  final User user;
+  
+  factory AuthResponseDto.fromJson(Map<String, dynamic> json) {
+    return AuthResponseDto(
+      token: json['token'] ?? '',
+      user: User.fromJson(json['user'] ?? {}),
+    );
+  }
+}
+```
+
+#### 환경 설정
+```dart
+// API Base URL은 환경변수 사용
+static const String baseUrl = String.fromEnvironment('API_BASE_URL', 
+  defaultValue: 'http://localhost:3000/api/v1');
+```
+
 ### 1. API 응답 타입 정의
 
 ```dart

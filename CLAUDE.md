@@ -3,6 +3,42 @@
 ## 프로젝트 개요
 **GNGM (가는김에)**는 지역 커뮤니티 기반의 배송/심부름 서비스 플랫폼으로, "따뜻한 신뢰의 커뮤니티"를 지향합니다.
 
+## API 데이터 처리 규칙 (중요)
+
+### DTO 패턴 강제 사용
+- **모든 API 요청/응답은 반드시 DTO 클래스를 사용해야 함**
+- `Map<String, dynamic>` 형태의 데이터 직접 사용 금지
+- DTO는 `/lib/models/dto/` 디렉토리에 구성
+
+### DTO 명명 규칙
+```
+요청 DTO: {기능}RequestDto (예: LoginRequestDto, CreateRequestDto)
+응답 DTO: {기능}ResponseDto (예: AuthResponseDto, RequestListResponseDto)
+```
+
+### DTO 구조 예시
+```dart
+// 요청 DTO
+class LoginRequestDto {
+  final String email;
+  final String password;
+  
+  Map<String, dynamic> toJson() => {...};
+}
+
+// 응답 DTO  
+class AuthResponseDto {
+  final String token;
+  final User user;
+  
+  factory AuthResponseDto.fromJson(Map<String, dynamic> json) => ...;
+}
+```
+
+### 환경 설정
+- API Base URL은 환경변수 사용: `String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3000/api/v1')`
+- 하드코딩된 localhost 사용 금지
+
 ## 작업 시 필수 확인사항
 
 ### 문서 참조 우선순위
