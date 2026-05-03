@@ -29,7 +29,7 @@ class RequestProvider with ChangeNotifier {
       );
       
       if (response.success && response.data != null) {
-        _requests = response.data!;
+        _requests = response.data!.requests;
         notifyListeners();
       } else {
         _setError(response.message ?? '요청 목록을 불러올 수 없습니다.');
@@ -57,7 +57,7 @@ class RequestProvider with ChangeNotifier {
       );
       
       if (response.success && response.data != null) {
-        _requests = response.data!;
+        _requests = response.data!.requests;
         notifyListeners();
       } else {
         _setError(response.message ?? '주변 요청을 불러올 수 없습니다.');
@@ -142,7 +142,7 @@ class RequestProvider with ChangeNotifier {
       final response = await _requestService.getMyRequests();
       
       if (response.success && response.data != null) {
-        _myRequests = response.data!;
+        _myRequests = response.data!.requests;
         notifyListeners();
       } else {
         _setError(response.message ?? '내 요청 목록을 불러올 수 없습니다.');

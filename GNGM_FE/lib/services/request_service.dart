@@ -1,5 +1,8 @@
 import '../models/api_response.dart';
 import '../models/request.dart';
+import '../models/dto/create_request_dto.dart';
+import '../models/dto/request_list_response_dto.dart';
+import '../models/dto/update_request_status_dto.dart';
 import 'api_client.dart';
 
 class RequestService {
@@ -7,7 +10,7 @@ class RequestService {
   
   RequestService(this._apiClient);
   
-  Future<ApiResponse<List<Request>>> getRequests({
+  Future<ApiResponse<RequestListResponseDto>> getRequests({
     String? categoryType,
   }) async {
     final queryParams = <String, dynamic>{};
@@ -15,38 +18,28 @@ class RequestService {
       queryParams['categoryType'] = categoryType;
     }
     
-    final response = await _apiClient.get<List<Request>>(
+    final response = await _apiClient.get<RequestListResponseDto>(
       '/requests',
       queryParameters: queryParams,
-      fromJson: (data) {
-        if (data is List) {
-          return data.map((item) => Request.fromJson(item)).toList();
-        }
-        return <Request>[];
-      },
+      fromJson: (data) => RequestListResponseDto.fromJson(data),
     );
     
     return response;
   }
   
-  Future<ApiResponse<List<Request>>> getNearbyRequests({
+  Future<ApiResponse<RequestListResponseDto>> getNearbyRequests({
     required double lat,
     required double lng,
     double radius = 5.0,
   }) async {
-    final response = await _apiClient.get<List<Request>>(
+    final response = await _apiClient.get<RequestListResponseDto>(
       '/requests/nearby',
       queryParameters: {
         'lat': lat,
         'lng': lng,
         'radius': radius,
       },
-      fromJson: (data) {
-        if (data is List) {
-          return data.map((item) => Request.fromJson(item)).toList();
-        }
-        return <Request>[];
-      },
+      fromJson: (data) => RequestListResponseDto.fromJson(data),
     );
     
     return response;
@@ -73,35 +66,32 @@ class RequestService {
     double? deliveryLng,
     required int feeAmount,
   }) async {
+    final requestDto = CreateRequestDto(
+      categoryType: categoryType,
+      title: title,
+      description: description,
+      pickupAddress: pickupAddress,
+      pickupLat: pickupLat,
+      pickupLng: pickupLng,
+      deliveryAddress: deliveryAddress,
+      deliveryLat: deliveryLat,
+      deliveryLng: deliveryLng,
+      feeAmount: feeAmount,
+    );
+    
     final response = await _apiClient.post<Request>(
       '/requests',
-      data: {
-        'categoryType': categoryType,
-        'title': title,
-        'description': description,
-        'pickupAddress': pickupAddress,
-        'pickupLat': pickupLat,
-        'pickupLng': pickupLng,
-        if (deliveryAddress != null) 'deliveryAddress': deliveryAddress,
-        if (deliveryLat != null) 'deliveryLat': deliveryLat,
-        if (deliveryLng != null) 'deliveryLng': deliveryLng,
-        'feeAmount': feeAmount,
-      },
+      data: requestDto.toJson(),
       fromJson: (data) => Request.fromJson(data),
     );
     
     return response;
   }
   
-  Future<ApiResponse<List<Request>>> getMyRequests() async {
-    final response = await _apiClient.get<List<Request>>(
+  Future<ApiResponse<RequestListResponseDto>> getMyRequests() async {
+    final response = await _apiClient.get<RequestListResponseDto>(
       '/requests/my',
-      fromJson: (data) {
-        if (data is List) {
-          return data.map((item) => Request.fromJson(item)).toList();
-        }
-        return <Request>[];
-      },
+      fromJson: (data) => RequestListResponseDto.fromJson(data),
     );
     
     return response;
@@ -111,9 +101,11 @@ class RequestService {
     String id, 
     String status,
   ) async {
+    final statusDto = UpdateRequestStatusDto(status: status);
+    
     final response = await _apiClient.put<Request>(
       '/requests/$id/status',
-      data: {'status': status},
+      data: statusDto.toJson(),
       fromJson: (data) => Request.fromJson(data),
     );
     
