@@ -42,16 +42,11 @@ class AuthProvider with ChangeNotifier {
       );
       
       if (response.success && response.data != null) {
-        final token = response.data!['token'] as String?;
-        final userData = response.data!['user'] as Map<String, dynamic>?;
-        
-        if (token != null && userData != null) {
-          await _saveToken(token);
-          _apiClient.setAuthToken(token);
-          _user = User.fromJson(userData);
-          notifyListeners();
-          return true;
-        }
+        await _saveToken(response.data!.token);
+        _apiClient.setAuthToken(response.data!.token);
+        _user = response.data!.user;
+        notifyListeners();
+        return true;
       }
       
       _setError(response.message ?? '로그인에 실패했습니다.');
@@ -82,16 +77,11 @@ class AuthProvider with ChangeNotifier {
       );
       
       if (response.success && response.data != null) {
-        final token = response.data!['token'] as String?;
-        final userData = response.data!['user'] as Map<String, dynamic>?;
-        
-        if (token != null && userData != null) {
-          await _saveToken(token);
-          _apiClient.setAuthToken(token);
-          _user = User.fromJson(userData);
-          notifyListeners();
-          return true;
-        }
+        await _saveToken(response.data!.token);
+        _apiClient.setAuthToken(response.data!.token);
+        _user = response.data!.user;
+        notifyListeners();
+        return true;
       }
       
       _setError(response.message ?? '회원가입에 실패했습니다.');

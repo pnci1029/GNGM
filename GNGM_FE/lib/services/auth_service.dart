@@ -1,5 +1,8 @@
 import '../models/api_response.dart';
 import '../models/user.dart';
+import '../models/dto/login_request_dto.dart';
+import '../models/dto/register_request_dto.dart';
+import '../models/dto/auth_response_dto.dart';
 import 'api_client.dart';
 
 class AuthService {
@@ -7,37 +10,38 @@ class AuthService {
   
   AuthService(this._apiClient);
   
-  Future<ApiResponse<Map<String, dynamic>>> login({
+  Future<ApiResponse<AuthResponseDto>> login({
     required String email,
     required String password,
   }) async {
-    final response = await _apiClient.post<Map<String, dynamic>>(
+    final requestDto = LoginRequestDto(email: email, password: password);
+    
+    final response = await _apiClient.post<AuthResponseDto>(
       '/auth/login',
-      data: {
-        'email': email,
-        'password': password,
-      },
-      fromJson: (data) => data is Map<String, dynamic> ? data : {},
+      data: requestDto.toJson(),
+      fromJson: (data) => AuthResponseDto.fromJson(data),
     );
     
     return response;
   }
   
-  Future<ApiResponse<Map<String, dynamic>>> register({
+  Future<ApiResponse<AuthResponseDto>> register({
     required String email,
     required String password,
     required String name,
     String? phone,
   }) async {
-    final response = await _apiClient.post<Map<String, dynamic>>(
+    final requestDto = RegisterRequestDto(
+      email: email,
+      password: password,
+      name: name,
+      phone: phone,
+    );
+    
+    final response = await _apiClient.post<AuthResponseDto>(
       '/auth/register',
-      data: {
-        'email': email,
-        'password': password,
-        'name': name,
-        if (phone != null) 'phone': phone,
-      },
-      fromJson: (data) => data is Map<String, dynamic> ? data : {},
+      data: requestDto.toJson(),
+      fromJson: (data) => AuthResponseDto.fromJson(data),
     );
     
     return response;
