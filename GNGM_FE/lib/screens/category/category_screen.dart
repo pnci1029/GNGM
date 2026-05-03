@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../constants/colors.dart';
 import '../../constants/text_styles.dart';
 import '../../widgets/common/simple_request_card.dart';
+import '../../providers/request_provider.dart';
+import '../../models/request.dart';
 
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
   final String categoryType;
 
   const CategoryScreen({
     super.key,
     required this.categoryType,
   });
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadRequests();
+  }
+
+  void _loadRequests() {
+    final requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    requestProvider.loadRequests(
+      categoryType: widget.categoryType == 'all' ? null : widget.categoryType,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +50,7 @@ class CategoryScreen extends StatelessWidget {
         icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
       ),
       title: Text(
-        _getCategoryTitle(categoryType),
+        _getCategoryTitle(widget.categoryType),
         style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
       ),
       actions: [
@@ -92,18 +113,93 @@ class CategoryScreen extends StatelessWidget {
   }
 
   Widget _buildRequestList() {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: 8, // 페이징 처리 필요
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) => SimpleRequestCard(
-        title: _getExampleTitle(index),
-        fee: _getExampleFee(index),
-        location: _getExampleLocation(index),
-        time: '${index + 1}분 전',
-        onTap: () => _navigateToDetail(context, index),
-      ),
+    return Consumer<RequestProvider>(
+      builder: (context, requestProvider, child) {
+        if (requestProvider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (requestProvider.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  requestProvider.error!,
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.error,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadRequests,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                  ),
+                  child: const Text('다시 시도'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (requestProvider.requests.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.inbox_outlined,
+                  size: 64,
+                  color: AppColors.textSecondary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '요청이 없습니다',
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: requestProvider.requests.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final request = requestProvider.requests[index];
+            return SimpleRequestCard(
+              title: request.title,
+              fee: '${request.feeAmount.toStringAsFixed(0)}원',
+              location: request.pickupAddress,
+              time: _formatTime(request.createdAt),
+              onTap: () => _navigateToDetail(context, request.id),
+            );
+          },
+        );
+      },
     );
+  }
+
+  String _formatTime(DateTime createdAt) {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    
+    if (difference.inMinutes < 1) {
+      return '방금 전';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}분 전';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}시간 전';
+    } else {
+      return '${difference.inDays}일 전';
+    }
   }
 
   String _getCategoryTitle(String type) {
@@ -121,34 +217,11 @@ class CategoryScreen extends StatelessWidget {
     }
   }
 
-  String _getExampleTitle(int index) {
-    switch (categoryType) {
-      case 'shopping':
-        return ['스타벅스 픽업', '편의점 물건', '마트 장보기', '약국 심부름'][index % 4];
-      case 'delivery':
-        return ['택배 전달', '음식 배달', '서류 전달', '선물 배송'][index % 4];
-      case 'transport':
-        return ['택시 동승', '지하철 동행', '버스 함께', '공항 동행'][index % 4];
-      default:
-        return '기타 도움 $index';
-    }
-  }
-
-  String _getExampleFee(int index) {
-    final fees = ['3,000원', '5,000원', '8,000원', '4,000원'];
-    return fees[index % fees.length];
-  }
-
-  String _getExampleLocation(int index) {
-    final locations = ['강남역', '홍대입구', '신촌', '명동'];
-    return locations[index % locations.length];
-  }
-
   void _showFilterDialog(BuildContext context) {
     // 상세 필터 다이얼로그
   }
 
-  void _navigateToDetail(BuildContext context, int index) {
-    Navigator.pushNamed(context, '/request-detail', arguments: 'request_${index + 1}');
+  void _navigateToDetail(BuildContext context, String requestId) {
+    Navigator.pushNamed(context, '/request-detail', arguments: requestId);
   }
 }

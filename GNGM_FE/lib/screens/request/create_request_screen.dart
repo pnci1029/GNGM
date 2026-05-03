@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../constants/colors.dart';
 import '../../constants/text_styles.dart';
+import '../../providers/request_provider.dart';
 
 class CreateRequestScreen extends StatefulWidget {
   const CreateRequestScreen({super.key});
@@ -17,7 +19,10 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
   String _title = '';
   String _description = '';
   String _location = '';
+  double _pickupLat = 37.4980;
+  double _pickupLng = 127.0276;
   int _fee = 0;
+  bool _isSubmitting = false;
 
   final _categories = [
     {'id': 'shopping', 'name': '쇼핑', 'icon': Icons.shopping_bag_outlined, 'color': AppColors.primary},
@@ -480,18 +485,23 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: _canProceed() ? _nextStep : null,
+              onPressed: _canProceed() && !_isSubmitting ? _nextStep : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 minimumSize: const Size(0, 48),
               ),
-              child: Text(
-                _currentStep == 4 ? '요청 등록하기' : '다음',
-                style: AppTextStyles.body.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: _isSubmitting
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  )
+                : Text(
+                    _currentStep == 4 ? '요청 등록하기' : '다음',
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
             ),
           ),
         ],
@@ -544,13 +554,46 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
         .firstWhere((cat) => cat['id'] == _selectedCategory)['name'] as String;
   }
 
-  void _submitRequest() {
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('요청이 등록되었습니다!'),
-        backgroundColor: AppColors.success,
-      ),
+  Future<void> _submitRequest() async {
+    if (_selectedCategory == null || _title.isEmpty || _description.isEmpty || _location.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    final requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    
+    final success = await requestProvider.createRequest(
+      categoryType: _selectedCategory!,
+      title: _title,
+      description: _description,
+      pickupAddress: _location,
+      pickupLat: _pickupLat,
+      pickupLng: _pickupLng,
+      feeAmount: _fee,
     );
+
+    setState(() {
+      _isSubmitting = false;
+    });
+
+    if (success) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('요청이 성공적으로 등록되었습니다!'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(requestProvider.error ?? '요청 등록에 실패했습니다.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
   }
 }
