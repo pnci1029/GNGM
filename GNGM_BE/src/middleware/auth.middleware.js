@@ -10,9 +10,14 @@ if (!process.env.JWT_SECRET) {
   throw new Error('Missing required environment variable: JWT_SECRET');
 }
 
-// JWT Strategy Configuration
+// JWT Strategy Configuration - Extract from both header and cookie
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeaderAsBearerToken(),
+    (req) => {
+      return req && req.cookies ? req.cookies.accessToken : null;
+    }
+  ]),
   secretOrKey: process.env.JWT_SECRET,
 };
 

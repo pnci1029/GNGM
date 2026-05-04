@@ -14,6 +14,7 @@ router.post('/login', loginRateLimit, AuthController.login);
 router.post('/refresh', authRateLimit, AuthController.refreshToken);
 
 // Protected routes
+router.get('/me', authenticate, AuthController.getProfile);
 router.get('/profile', authenticate, AuthController.getProfile);
 router.put('/profile', authenticate, AuthController.updateProfile);
 router.delete('/account', authenticate, AuthController.deleteAccount);

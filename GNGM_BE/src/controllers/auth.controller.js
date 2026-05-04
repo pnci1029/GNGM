@@ -63,9 +63,27 @@ class AuthController {
 
       const result = await AuthService.loginUser(value.email, value.password);
 
+      // Set HTTP-Only cookies
+      res.cookie('accessToken', result.tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      });
+
+      res.cookie('refreshToken', result.tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
       res.json({
         success: true,
-        data: result,
+        data: {
+          user: result.user,
+          tokens: result.tokens, // Also send tokens for Flutter compatibility
+        },
         message: 'Login successful',
       });
     } catch (error) {
@@ -82,20 +100,39 @@ class AuthController {
 
   static async refreshToken(req, res, next) {
     try {
-      const { error, value } = refreshSchema.validate(req.body);
-      if (error) {
+      // Get refresh token from cookie instead of body
+      const refreshToken = req.cookies.refreshToken;
+      
+      if (!refreshToken) {
         return res.status(400).json({
           success: false,
-          error: error.details[0].message,
-          code: 'VALIDATION_ERROR',
+          error: 'Refresh token not found',
+          code: 'MISSING_REFRESH_TOKEN',
         });
       }
 
-      const result = await AuthService.refreshToken(value.refreshToken);
+      const result = await AuthService.refreshToken(refreshToken);
+
+      // Set new HTTP-Only cookies
+      res.cookie('accessToken', result.tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      });
+
+      res.cookie('refreshToken', result.tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
 
       res.json({
         success: true,
-        data: result,
+        data: {
+          user: result.user,
+        },
         message: 'Token refreshed successfully',
       });
     } catch (error) {
@@ -159,8 +196,10 @@ class AuthController {
   }
 
   static async logout(req, res) {
-    // In a stateless JWT system, logout is handled client-side
-    // But we can implement token blacklisting here if needed
+    // Clear HTTP-Only cookies
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
     res.json({
       success: true,
       data: null,
