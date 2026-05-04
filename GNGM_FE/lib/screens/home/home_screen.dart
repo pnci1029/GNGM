@@ -16,14 +16,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isFirstLoad = true;
+
   @override
   void initState() {
     super.initState();
-    _loadNearbyRequests();
+    // 첫 번째 로드 때만 데이터 요청
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isFirstLoad) {
+        _loadNearbyRequests();
+        _isFirstLoad = false;
+      }
+    });
   }
 
   void _loadNearbyRequests() {
     final requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    // 이미 데이터가 있으면 로딩하지 않음
+    if (requestProvider.requests.isNotEmpty && !requestProvider.isLoading) {
+      return;
+    }
+    
     requestProvider.loadNearbyRequests(
       lat: 37.4980,
       lng: 127.0276,
