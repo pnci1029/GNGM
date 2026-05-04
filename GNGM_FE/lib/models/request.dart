@@ -1,3 +1,5 @@
+import 'user.dart';
+
 class Request {
   final String id;
   final String userId;
@@ -14,6 +16,7 @@ class Request {
   final String status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final User user;
 
   const Request({
     required this.id,
@@ -31,6 +34,7 @@ class Request {
     required this.status,
     this.createdAt,
     this.updatedAt,
+    required this.user,
   });
 
   factory Request.fromJson(Map<String, dynamic> json) {
@@ -50,6 +54,7 @@ class Request {
       status: json['status'] ?? 'open',
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      user: User.fromJson(json['user'] ?? {}),
     );
   }
 
@@ -89,6 +94,7 @@ class Request {
     String? status,
     DateTime? createdAt,
     DateTime? updatedAt,
+    User? user,
   }) {
     return Request(
       id: id ?? this.id,
@@ -106,6 +112,7 @@ class Request {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      user: user ?? this.user,
     );
   }
 
