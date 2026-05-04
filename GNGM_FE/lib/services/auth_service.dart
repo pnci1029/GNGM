@@ -3,10 +3,10 @@ import '../models/user.dart';
 import '../models/dto/login_request_dto.dart';
 import '../models/dto/register_request_dto.dart';
 import '../models/dto/auth_response_dto.dart';
-import 'api_client.dart';
+import 'api_client_factory.dart';
 
 class AuthService {
-  final ApiClient _apiClient;
+  final ApiClientInterface _apiClient;
   
   AuthService(this._apiClient);
   
@@ -50,7 +50,7 @@ class AuthService {
   Future<ApiResponse<User>> getCurrentUser() async {
     final response = await _apiClient.get<User>(
       '/auth/me',
-      fromJson: (data) => User.fromJson(data),
+      fromJson: (data) => User.fromJson(data['data']['user']),
     );
     
     return response;
@@ -58,6 +58,29 @@ class AuthService {
   
   Future<ApiResponse<void>> logout() async {
     final response = await _apiClient.post<void>('/auth/logout');
+    return response;
+  }
+
+  Future<ApiResponse<User>> updateProfile({
+    String? name,
+    String? phone,
+    String? profileImage,
+    double? locationLat,
+    double? locationLng,
+  }) async {
+    final data = <String, dynamic>{};
+    if (name != null) data['name'] = name;
+    if (phone != null) data['phone'] = phone;
+    if (profileImage != null) data['profileImage'] = profileImage;
+    if (locationLat != null) data['locationLat'] = locationLat;
+    if (locationLng != null) data['locationLng'] = locationLng;
+
+    final response = await _apiClient.put<User>(
+      '/auth/profile',
+      data: data,
+      fromJson: (data) => User.fromJson(data['data']['user']),
+    );
+    
     return response;
   }
 }
