@@ -305,7 +305,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _formatTime(DateTime createdAt) {
+  String _formatTime(DateTime? createdAt) {
+    if (createdAt == null) return '알 수 없음';
+    
     final now = DateTime.now();
     final difference = now.difference(createdAt);
     

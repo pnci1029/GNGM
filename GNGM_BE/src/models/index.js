@@ -4,11 +4,15 @@ const { sequelize } = require('../config/database');
 const UserModel = require('./user.model');
 const ServiceRequestModel = require('./serviceRequest.model');
 const ServiceOfferModel = require('./serviceOffer.model');
+const ChatRoomModel = require('./chatRoom.model');
+const ChatMessageModel = require('./chatMessage.model');
 
 // Initialize models
 const User = UserModel(sequelize);
 const ServiceRequest = ServiceRequestModel(sequelize);
 const ServiceOffer = ServiceOfferModel(sequelize);
+const ChatRoom = ChatRoomModel(sequelize);
+const ChatMessage = ChatMessageModel(sequelize);
 
 // Define associations
 User.hasMany(ServiceRequest, {
@@ -42,11 +46,28 @@ ServiceOffer.belongsTo(ServiceRequest, {
   as: 'serviceRequest',
 });
 
+// Chat associations
+ChatRoom.associate({ User, ServiceRequest, ServiceOffer, ChatMessage });
+ChatMessage.associate({ User, ChatRoom });
+
+// Additional associations for chat
+ServiceRequest.hasMany(ChatRoom, {
+  foreignKey: 'requestId',
+  as: 'chatRooms',
+});
+
+ServiceOffer.hasMany(ChatRoom, {
+  foreignKey: 'offerId',
+  as: 'chatRooms',
+});
+
 // Export models and sequelize instance
 const models = {
   User,
   ServiceRequest,
   ServiceOffer,
+  ChatRoom,
+  ChatMessage,
   sequelize,
 };
 
