@@ -2,10 +2,10 @@ import '../models/api_response.dart';
 import '../models/offer.dart';
 import '../models/dto/create_offer_dto.dart';
 import '../models/dto/offer_list_response_dto.dart';
-import 'api_client.dart';
+import 'api_client_factory.dart';
 
 class OfferService {
-  final ApiClient _apiClient;
+  final ApiClientInterface _apiClient;
 
   OfferService(this._apiClient);
 

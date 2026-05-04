@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 import '../models/api_response.dart';
+import 'api_client_factory.dart';
 
-class ApiClient {
+class ApiClient implements ApiClientInterface {
   late final Dio _dio;
+  late final CookieJar _cookieJar;
   static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3000/api/v1');
   
   ApiClient() {
+    _cookieJar = CookieJar();
+    
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -13,7 +19,12 @@ class ApiClient {
       headers: {
         'Content-Type': 'application/json',
       },
+      // Enable credentials for cross-origin requests
+      extra: {'withCredentials': true},
     ));
+    
+    // Add cookie manager to automatically handle cookies
+    _dio.interceptors.add(CookieManager(_cookieJar));
     
     _setupInterceptors();
   }
@@ -22,12 +33,20 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
+          print('🚀 Request: ${options.method} ${options.path}');
+          print('📨 Headers: ${options.headers}');
+          print('🍪 Cookies: ${_cookieJar.loadForRequest(Uri.parse(baseUrl + options.path))}');
           handler.next(options);
         },
         onResponse: (response, handler) {
+          print('✅ Response: ${response.statusCode}');
+          if (response.headers['set-cookie'] != null) {
+            print('🍪 Set-Cookie: ${response.headers['set-cookie']}');
+          }
           handler.next(response);
         },
         onError: (error, handler) {
+          print('❌ Error: ${error.message}');
           handler.next(error);
         },
       ),
@@ -40,6 +59,10 @@ class ApiClient {
   
   void clearAuthToken() {
     _dio.options.headers.remove('Authorization');
+  }
+  
+  void clearCookies() {
+    _cookieJar.deleteAll();
   }
   
   Future<ApiResponse<T>> get<T>(
