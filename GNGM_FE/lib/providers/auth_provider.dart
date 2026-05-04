@@ -92,11 +92,9 @@ class AuthProvider with ChangeNotifier {
       );
       
       if (response.success && response.data != null) {
-        // 웹에서는 쿠키가 자동으로 설정되므로 토큰 저장 불필요
-        if (!kIsWeb) {
-          await _saveToken(response.data!.token);
-          _apiClient.setAuthToken(response.data!.token);
-        }
+        // 웹과 모바일 모두 토큰 저장
+        await _saveToken(response.data!.token);
+        _apiClient.setAuthToken(response.data!.token);
         _user = response.data!.user;
         notifyListeners();
         return true;
@@ -171,13 +169,9 @@ class AuthProvider with ChangeNotifier {
       // 로그아웃 요청 실패해도 로컬 상태는 클리어
     }
     
-    // 웹에서는 쿠키 클리어, 모바일에서는 토큰 클리어
-    if (kIsWeb) {
-      _apiClient.clearCookies();
-    } else {
-      await _clearToken();
-      _apiClient.clearAuthToken();
-    }
+    // 웹과 모바일 모두 토큰 클리어
+    await _clearToken();
+    _apiClient.clearAuthToken();
     
     _user = null;
     _clearError();
