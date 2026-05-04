@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const passport = require('passport');
+const http = require('http');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 // Import database models
@@ -12,6 +14,7 @@ const { sequelize } = require('./src/models');
 const authRoutes = require('./src/routes/auth.routes');
 const serviceRequestRoutes = require('./src/routes/serviceRequest.routes');
 const serviceOfferRoutes = require('./src/routes/serviceOffer.routes');
+const chatRoutes = require('./src/routes/chat.routes');
 
 // Validate required environment variables
 const requiredVars = ['PORT', 'NODE_ENV'];
@@ -22,6 +25,13 @@ if (missingVars.length > 0) {
 }
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 const PORT = parseInt(process.env.PORT, 10);
 
 // Middleware
@@ -51,6 +61,10 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/requests', serviceRequestRoutes);
 app.use('/api/v1/offers', serviceOfferRoutes);
+app.use('/api/v1/chat', chatRoutes);
+
+// Socket.IO setup
+require('./src/socket/socketHandler')(io);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -77,9 +91,10 @@ const startServer = async () => {
     }
 
     // Start server
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 GNGM Server is running on port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+      console.log(`💬 Socket.IO enabled for real-time chat`);
     });
   } catch (error) {
     console.error('❌ Unable to connect to database:', error);
