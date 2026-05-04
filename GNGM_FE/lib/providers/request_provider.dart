@@ -30,7 +30,6 @@ class RequestProvider with ChangeNotifier {
       
       if (response.success && response.data != null) {
         _requests = response.data!.requests;
-        notifyListeners();
       } else {
         _setError(response.message ?? '요청 목록을 불러올 수 없습니다.');
       }
@@ -58,7 +57,6 @@ class RequestProvider with ChangeNotifier {
       
       if (response.success && response.data != null) {
         _requests = response.data!.requests;
-        notifyListeners();
       } else {
         _setError(response.message ?? '주변 요청을 불러올 수 없습니다.');
       }
@@ -78,7 +76,6 @@ class RequestProvider with ChangeNotifier {
       
       if (response.success && response.data != null) {
         _selectedRequest = response.data;
-        notifyListeners();
       } else {
         _setError(response.message ?? '요청 상세 정보를 불러올 수 없습니다.');
       }
@@ -120,7 +117,6 @@ class RequestProvider with ChangeNotifier {
       
       if (response.success && response.data != null) {
         _requests.insert(0, response.data!);
-        notifyListeners();
         return true;
       } else {
         _setError(response.message ?? '요청 생성에 실패했습니다.');
@@ -143,7 +139,6 @@ class RequestProvider with ChangeNotifier {
       
       if (response.success && response.data != null) {
         _myRequests = response.data!.requests;
-        notifyListeners();
       } else {
         _setError(response.message ?? '내 요청 목록을 불러올 수 없습니다.');
       }
@@ -193,12 +188,15 @@ class RequestProvider with ChangeNotifier {
   }
   
   void _setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
+    if (_isLoading != loading) {
+      _isLoading = loading;
+      notifyListeners();
+    }
   }
   
   void _setError(String error) {
     _error = error;
+    _setLoading(false); // 에러 발생 시 로딩 상태 해제
     notifyListeners();
   }
   

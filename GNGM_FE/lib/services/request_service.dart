@@ -3,10 +3,10 @@ import '../models/request.dart';
 import '../models/dto/create_request_dto.dart';
 import '../models/dto/request_list_response_dto.dart';
 import '../models/dto/update_request_status_dto.dart';
-import 'api_client.dart';
+import 'api_client_factory.dart';
 
 class RequestService {
-  final ApiClient _apiClient;
+  final ApiClientInterface _apiClient;
   
   RequestService(this._apiClient);
   
