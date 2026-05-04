@@ -32,7 +32,8 @@
     "passport-jwt": "^4.0.1",
     "passport-kakao": "^1.0.1",
     "passport-google-oauth20": "^2.0.0",
-    "express-rate-limit": "^7.1.5"
+    "express-rate-limit": "^7.1.5",
+    "socket.io": "^4.7.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
