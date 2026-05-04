@@ -38,6 +38,9 @@ dependencies:
   
   # HTTP client and API communication
   dio: ^5.4.0
+  dio_cookie_manager: ^3.1.1
+  cookie_jar: ^4.0.8
+  universal_html: ^2.2.4
   
   # State management
   provider: ^6.1.1
