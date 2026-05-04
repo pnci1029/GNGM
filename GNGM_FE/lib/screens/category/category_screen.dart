@@ -187,7 +187,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  String _formatTime(DateTime createdAt) {
+  String _formatTime(DateTime? createdAt) {
+    if (createdAt == null) return '알 수 없음';
+    
     final now = DateTime.now();
     final difference = now.difference(createdAt);
     

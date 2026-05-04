@@ -16,6 +16,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _user != null;
+  bool get isLoggedIn => _user != null;
   
   AuthProvider(this._authService, this._apiClient) {
     _initializeAuth();
