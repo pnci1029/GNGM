@@ -11,6 +11,7 @@ import 'screens/profile/profile_complete_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/request_provider.dart';
 import 'providers/offer_provider.dart';
+import 'providers/location_provider.dart';
 import 'services/api_client_factory.dart';
 import 'services/auth_service.dart';
 import 'services/request_service.dart';
@@ -35,6 +36,7 @@ class GNGMApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider(authService, apiClient)),
         ChangeNotifierProvider(create: (_) => RequestProvider(requestService)),
         ChangeNotifierProvider(create: (_) => OfferProvider(offerService)),
+        ChangeNotifierProvider(create: (_) => LocationProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

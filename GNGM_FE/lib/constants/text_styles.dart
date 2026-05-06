@@ -34,6 +34,14 @@ class AppTextStyles {
     fontFamily: 'Pretendard',
   );
 
+  // Small body text (작은 본문)
+  static const TextStyle bodySmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textPrimary,
+    fontFamily: 'Pretendard',
+  );
+
   // Caption (캡션)
   static const TextStyle caption = TextStyle(
     fontSize: 12,

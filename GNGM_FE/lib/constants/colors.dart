@@ -6,6 +6,7 @@ class AppColors {
   static const Color primaryLight = Color(0xFF81C784);  // 밝은 톤 - 라이트 민트
   static const Color primaryDark = Color(0xFF4CAF50);   // 어두운 톤 - 딥 민트
   static const Color primaryPale = Color(0xFFF1F8E9);   // 연한 톤 - 페일 민트
+  static const Color secondary = Color(0xFFFFB74D);     // 보조 색상 - 소프트 오렌지
   
   // Status Colors
   static const Color success = Color(0xFF66BB6A);       // 성공 (메인 컬러와 동일)
