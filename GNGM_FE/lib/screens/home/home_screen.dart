@@ -6,6 +6,7 @@ import '../../widgets/common/category_button.dart';
 import '../../widgets/common/floating_action_button.dart';
 import '../../providers/request_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../models/request.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,14 +33,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadNearbyRequests() {
     final requestProvider = Provider.of<RequestProvider>(context, listen: false);
+    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
+    
     // 이미 데이터가 있으면 로딩하지 않음
     if (requestProvider.requests.isNotEmpty && !requestProvider.isLoading) {
       return;
     }
     
     requestProvider.loadNearbyRequests(
-      lat: 37.4980,
-      lng: 127.0276,
+      lat: locationProvider.latitude,
+      lng: locationProvider.longitude,
       radius: 5.0,
     );
   }

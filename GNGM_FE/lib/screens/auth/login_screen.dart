@@ -12,8 +12,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: 'test@test.com');
+  final _passwordController = TextEditingController(text: 'test1234');
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
@@ -215,15 +215,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
+
       final success = await authProvider.login(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       if (success && mounted) {
         Navigator.pushReplacementNamed(context, '/');
-      }
     }
   }
 
