@@ -47,6 +47,9 @@ dependencies:
   
   # Shared preferences for local storage
   shared_preferences: ^2.2.2
+  
+  # Location services
+  geolocator: ^12.0.0
 
 dev_dependencies:
   flutter_test:
