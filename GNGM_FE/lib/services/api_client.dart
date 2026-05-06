@@ -134,18 +134,31 @@ class ApiClient implements ApiClientInterface {
     T Function(dynamic)? fromJson,
   ) {
     if (response.statusCode == 200 || response.statusCode == 201) {
-      T? data;
-      if (fromJson != null && response.data != null) {
-        data = fromJson(response.data);
-      } else {
-        data = response.data;
-      }
+      // 백엔드 응답의 success 필드 확인
+      final isSuccess = response.data?['success'] ?? true;
       
-      return ApiResponse<T>(
-        success: true,
-        data: data,
-        message: null,
-      );
+      if (isSuccess) {
+        T? data;
+        if (fromJson != null && response.data != null) {
+          // 백엔드 응답이 { "success": true, "data": {...} } 형태인 경우 data 부분만 전달
+          final responseData = response.data['data'] ?? response.data;
+          data = fromJson(responseData);
+        } else {
+          data = response.data;
+        }
+        
+        return ApiResponse<T>(
+          success: true,
+          data: data,
+          message: response.data?['message'],
+        );
+      } else {
+        return ApiResponse<T>(
+          success: false,
+          data: null,
+          message: response.data?['message'] ?? '요청 처리에 실패했습니다.',
+        );
+      }
     } else {
       return ApiResponse<T>(
         success: false,
