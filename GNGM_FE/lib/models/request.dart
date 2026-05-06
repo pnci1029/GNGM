@@ -45,17 +45,27 @@ class Request {
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       pickupAddress: json['pickupAddress'] ?? '',
-      pickupLat: (json['pickupLat'] ?? 0.0).toDouble(),
-      pickupLng: (json['pickupLng'] ?? 0.0).toDouble(),
+      pickupLat: _parseDouble(json['pickupLat']) ?? 0.0,
+      pickupLng: _parseDouble(json['pickupLng']) ?? 0.0,
       deliveryAddress: json['deliveryAddress'],
-      deliveryLat: json['deliveryLat']?.toDouble(),
-      deliveryLng: json['deliveryLng']?.toDouble(),
+      deliveryLat: _parseDouble(json['deliveryLat']),
+      deliveryLng: _parseDouble(json['deliveryLng']),
       feeAmount: json['feeAmount'] ?? 0,
       status: json['status'] ?? 'open',
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      user: User.fromJson(json['user'] ?? {}),
+      user: User.fromJson((json['user'] as Map<String, dynamic>?) ?? {}),
     );
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value);
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {

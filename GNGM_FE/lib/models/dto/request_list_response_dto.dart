@@ -7,9 +7,10 @@ class RequestListResponseDto {
     required this.requests,
   });
 
-  factory RequestListResponseDto.fromJson(List<dynamic> json) {
+  factory RequestListResponseDto.fromJson(Map<String, dynamic> json) {
+    final requestsData = json['requests'] as List<dynamic>? ?? [];
     return RequestListResponseDto(
-      requests: json.map((item) => Request.fromJson(item)).toList(),
+      requests: requestsData.map((item) => Request.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
 
