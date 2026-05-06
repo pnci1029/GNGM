@@ -57,6 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
             // 상단 헤더 (최소한의 정보만)
             _buildHeader(),
             
+            // 위치 상태 표시
+            _buildLocationStatus(),
+            
             // 메인 액션 카드 (핵심 기능만)
             Expanded(
               child: _buildMainContent(context),
@@ -344,6 +347,131 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _navigateToNearbyList(BuildContext context) {
     Navigator.pushNamed(context, '/category', arguments: 'all');
+  }
+
+  Widget _buildLocationStatus() {
+    return Consumer<LocationProvider>(
+      builder: (context, locationProvider, child) {
+        if (locationProvider.isLoading) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  '위치 정보를 가져오는 중...',
+                  style: AppTextStyles.bodySmall,
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (locationProvider.error != null) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.error.withOpacity(0.3)),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_off,
+                      color: AppColors.error,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        locationProvider.error!,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => locationProvider.getCurrentLocation(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: Text(
+                      '위치 권한 허용하기',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (locationProvider.currentPosition != null) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.success.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                  color: AppColors.success,
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '📍 ${locationProvider.currentAddress}',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.success,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 16),
+                  onPressed: () {
+                    locationProvider.refreshLocation();
+                    _loadNearbyRequests();
+                  },
+                  color: AppColors.success,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   void _showCreateRequestDialog(BuildContext context) {

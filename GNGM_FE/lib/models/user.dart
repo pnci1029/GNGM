@@ -37,14 +37,24 @@ class User {
       phone: json['phone'],
       profileImage: json['profileImage'],
       providerType: json['providerType'] ?? 'local',
-      ratingAvg: json['ratingAvg']?.toDouble(),
+      ratingAvg: _parseDouble(json['ratingAvg']),
       trustScore: json['trustScore'] ?? 0,
-      locationLat: json['locationLat']?.toDouble(),
-      locationLng: json['locationLng']?.toDouble(),
+      locationLat: _parseDouble(json['locationLat']),
+      locationLng: _parseDouble(json['locationLng']),
       isActive: json['isActive'] ?? true,
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value);
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {
