@@ -1,24 +1,48 @@
 import '../user.dart';
 
+class AuthTokens {
+  final String accessToken;
+  final String refreshToken;
+
+  const AuthTokens({
+    required this.accessToken,
+    required this.refreshToken,
+  });
+
+  factory AuthTokens.fromJson(Map<String, dynamic> json) {
+    return AuthTokens(
+      accessToken: json['accessToken'] ?? '',
+      refreshToken: json['refreshToken'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'accessToken': accessToken,
+      'refreshToken': refreshToken,
+    };
+  }
+}
+
 class AuthResponseDto {
-  final String token;
+  final AuthTokens tokens;
   final User user;
 
   const AuthResponseDto({
-    required this.token,
+    required this.tokens,
     required this.user,
   });
 
   factory AuthResponseDto.fromJson(Map<String, dynamic> json) {
     return AuthResponseDto(
-      token: json['token'] ?? '',
+      tokens: AuthTokens.fromJson(json['tokens'] ?? {}),
       user: User.fromJson(json['user'] ?? {}),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'token': token,
+      'tokens': tokens.toJson(),
       'user': user.toJson(),
     };
   }

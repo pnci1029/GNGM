@@ -15,7 +15,7 @@ services:
     networks:
       - gngm-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gngm_user -d gngm_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 30s
       timeout: 10s
       retries: 5

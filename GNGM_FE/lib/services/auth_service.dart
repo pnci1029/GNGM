@@ -50,7 +50,7 @@ class AuthService {
   Future<ApiResponse<User>> getCurrentUser() async {
     final response = await _apiClient.get<User>(
       '/auth/me',
-      fromJson: (data) => User.fromJson(data['data']['user']),
+      fromJson: (data) => User.fromJson(data['user']),
     );
     
     return response;
@@ -78,7 +78,7 @@ class AuthService {
     final response = await _apiClient.put<User>(
       '/auth/profile',
       data: data,
-      fromJson: (data) => User.fromJson(data['data']['user']),
+      fromJson: (data) => User.fromJson(data['user']),
     );
     
     return response;
