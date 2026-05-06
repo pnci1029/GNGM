@@ -51,6 +51,8 @@ services:
       - "3001:3000"
     volumes:
       - ./GNGM_FE:/app
+    environment:
+      - KAKAO_API_KEY=${KAKAO_API_KEY}
     depends_on:
       - backend
     networks:
