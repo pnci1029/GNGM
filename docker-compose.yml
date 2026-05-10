@@ -25,7 +25,7 @@ services:
       context: ./GNGM_BE
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./GNGM_BE:/app
       - /app/node_modules
@@ -48,7 +48,7 @@ services:
       context: ./GNGM_FE
       dockerfile: Dockerfile.dev
     ports:
-      - "3001:3000"
+      - "3000:3000"
     volumes:
       - ./GNGM_FE:/app
     environment:

@@ -7,12 +7,18 @@ class AddressService {
   static const String _kakaoApiKey = String.fromEnvironment('KAKAO_API_KEY', defaultValue: '');
 
   Future<String> getAddressFromCoordinates(double lat, double lng) async {
+    print('🗺️ AddressService.getAddressFromCoordinates() 시작');
+    print('📍 좌표: lat=$lat, lng=$lng');
+    
     if (_kakaoApiKey.isEmpty) {
       print('🔥 Kakao API 키가 설정되지 않았습니다.');
       return '위치 정보 없음 (API 키 누락)';
     }
     
+    print('🔑 API 키 확인됨: ${_kakaoApiKey.substring(0, 8)}...');
+    
     try {
+      print('🌐 Kakao API 요청 시작...');
       final response = await _dio.get(
         _baseUrl,
         queryParameters: {
@@ -30,17 +36,25 @@ class AddressService {
         ),
       );
 
+      print('📡 API 응답 상태: ${response.statusCode}');
+      print('📡 API 응답 데이터: ${response.data}');
+
       if (response.statusCode == 200) {
         final data = response.data;
         final documents = data['documents'] as List?;
         
+        print('📄 Documents 개수: ${documents?.length ?? 0}');
+        
         if (documents != null && documents.isNotEmpty) {
           final address = documents[0]['address'];
+          print('🏠 주소 정보: $address');
           
           if (address != null) {
             final region1 = address['region_1depth_name'] ?? '';
             final region2 = address['region_2depth_name'] ?? '';
             final region3 = address['region_3depth_name'] ?? '';
+            
+            print('🗾 지역 정보: region1=$region1, region2=$region2, region3=$region3');
             
             // "서울시 강남구" 형태로 반환
             String addressText = '';
@@ -55,16 +69,23 @@ class AddressService {
               }
             }
             
+            print('✅ 최종 주소: $addressText');
             return addressText.isNotEmpty ? addressText : '위치 정보 없음';
           }
+        } else {
+          print('❌ 문서가 비어있음');
         }
+      } else {
+        print('❌ API 응답 실패: ${response.statusCode}');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('🔥 주소 변환 실패: $e');
+      print('🔥 스택 트레이스: $stackTrace');
       // 간단한 에러 처리 (API 키 문제일 가능성도 있음)
       return '주소 변환 실패';
     }
     
+    print('⚠️ 주소 정보를 찾을 수 없음');
     return '위치 정보 없음';
   }
 
