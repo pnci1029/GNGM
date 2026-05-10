@@ -7,7 +7,7 @@ import 'api_client_factory.dart';
 class ApiClient implements ApiClientInterface {
   late final Dio _dio;
   late final CookieJar _cookieJar;
-  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3000/api/v1');
+  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3001/api/v1');
   
   ApiClient() {
     _cookieJar = CookieJar();

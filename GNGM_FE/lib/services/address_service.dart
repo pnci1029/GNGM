@@ -7,18 +7,11 @@ class AddressService {
   static const String _kakaoApiKey = String.fromEnvironment('KAKAO_API_KEY', defaultValue: '');
 
   Future<String> getAddressFromCoordinates(double lat, double lng) async {
-    print('🗺️ AddressService.getAddressFromCoordinates() 시작');
-    print('📍 좌표: lat=$lat, lng=$lng');
-    
     if (_kakaoApiKey.isEmpty) {
-      print('🔥 Kakao API 키가 설정되지 않았습니다.');
       return '위치 정보 없음 (API 키 누락)';
     }
     
-    print('🔑 API 키 확인됨: ${_kakaoApiKey.substring(0, 8)}...');
-    
     try {
-      print('🌐 Kakao API 요청 시작...');
       final response = await _dio.get(
         _baseUrl,
         queryParameters: {
