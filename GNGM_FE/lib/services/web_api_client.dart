@@ -5,7 +5,7 @@ import 'api_client_factory.dart';
 
 class WebApiClient implements ApiClientInterface {
   late final Dio _dio;
-  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3000/api/v1');
+  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3001/api/v1');
   
   WebApiClient() {
     _dio = Dio(BaseOptions(
