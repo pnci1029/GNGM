@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/colors.dart';
 import '../../constants/text_styles.dart';
-import '../../widgets/common/simple_request_card.dart';
+import '../../widgets/category/category_filter_bar.dart';
+import '../../widgets/category/category_request_list.dart';
 import '../../providers/request_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../models/request.dart';
@@ -134,81 +135,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget _buildBody() {
     return Column(
       children: [
-        // 검색바
-        _buildSearchBar(),
-        
-        // 필터 탭
-        _buildFilterTabs(),
-        
-        // 요청 목록
-        Expanded(
-          child: _buildRequestList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      color: AppColors.white,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadow,
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: '제목이나 내용으로 검색...',
-            hintStyle: AppTextStyles.body.copyWith(
-              color: AppColors.textSecondary.withOpacity(0.7),
-            ),
-            prefixIcon: Icon(
-              Icons.search,
-              color: AppColors.textSecondary.withOpacity(0.7),
-              size: 20,
-            ),
-            suffixIcon: _searchQuery.isNotEmpty
-                ? IconButton(
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                      _loadRequests();
-                    },
-                    icon: Icon(
-                      Icons.clear,
-                      color: AppColors.textSecondary.withOpacity(0.7),
-                      size: 18,
-                    ),
-                  )
-                : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primary, width: 2),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          onChanged: (value) {
+        // 검색바 + 필터 탭
+        CategoryFilterBar(
+          searchQuery: _searchQuery,
+          selectedSort: _selectedSort,
+          searchController: _searchController,
+          onSearchChanged: (value) {
             setState(() {
               _searchQuery = value;
             });
@@ -218,189 +150,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
               _loadRequests();
             }
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterTabs() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      color: AppColors.white,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _buildFilterChip('전체', SortOption.all),
-            const SizedBox(width: 8),
-            _buildFilterChip('가까운 순', SortOption.distance),
-            const SizedBox(width: 8),
-            _buildFilterChip('최신 순', SortOption.recent),
-            const SizedBox(width: 8),
-            _buildFilterChip('높은 가격순', SortOption.priceHigh),
-            const SizedBox(width: 8),
-            _buildFilterChip('낮은 가격순', SortOption.priceLow),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label, SortOption option) {
-    final isSelected = _selectedSort == option;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
+          onSortChanged: (option) {
             setState(() {
               _selectedSort = option;
             });
             _loadRequests();
           },
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.primary : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isSelected ? AppColors.primary : AppColors.border,
-                width: isSelected ? 1.5 : 1,
-              ),
-              boxShadow: isSelected ? [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.2),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ] : null,
-            ),
-            child: Text(
-              label,
-              style: AppTextStyles.caption.copyWith(
-                color: isSelected ? AppColors.white : AppColors.textSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              ),
-            ),
+        ),
+        
+        // 요청 목록
+        Expanded(
+          child: CategoryRequestList(
+            filteredRequests: _getFilteredRequests(
+              Provider.of<RequestProvider>(context).requests),
+            searchQuery: _searchQuery,
+            onRetry: _loadRequests,
+            onNavigateToDetail: _navigateToDetail,
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildRequestList() {
-    return Consumer<RequestProvider>(
-      builder: (context, requestProvider, child) {
-        if (requestProvider.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
 
-        if (requestProvider.error != null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  requestProvider.error!,
-                  style: AppTextStyles.body.copyWith(
-                    color: AppColors.error,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _loadRequests,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                  ),
-                  child: const Text('다시 시도'),
-                ),
-              ],
-            ),
-          );
-        }
 
-        if (requestProvider.requests.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryPale,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.search_off_rounded,
-                    size: 48,
-                    color: AppColors.primary.withOpacity(0.6),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  _searchQuery.isNotEmpty ? '검색 결과가 없습니다' : '요청이 없습니다',
-                  style: AppTextStyles.subtitle.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _searchQuery.isNotEmpty 
-                      ? '다른 검색어로 다시 시도해보세요'
-                      : '새로운 요청이 등록되면 알려드릴게요',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary.withOpacity(0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
 
-        return ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: _getFilteredRequests(requestProvider.requests).length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final filteredRequests = _getFilteredRequests(requestProvider.requests);
-            final request = filteredRequests[index];
-            return SimpleRequestCard(
-              title: request.title,
-              fee: '${request.feeAmount.toStringAsFixed(0)}원',
-              location: request.pickupAddress,
-              time: _formatTime(request.createdAt),
-              onTap: () => _navigateToDetail(context, request.id),
-            );
-          },
-        );
-      },
-    );
-  }
 
-  String _formatTime(DateTime? createdAt) {
-    if (createdAt == null) return '알 수 없음';
-    
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
-    
-    if (difference.inMinutes < 1) {
-      return '방금 전';
-    } else if (difference.inHours < 1) {
-      return '${difference.inMinutes}분 전';
-    } else if (difference.inDays < 1) {
-      return '${difference.inHours}시간 전';
-    } else {
-      return '${difference.inDays}일 전';
-    }
-  }
 
   String _getCategoryTitle(String type) {
     switch (type) {
