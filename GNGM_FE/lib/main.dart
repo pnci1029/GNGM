@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants/colors.dart';
 import 'constants/text_styles.dart';
+import 'constants/theme_data.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/category/category_screen.dart';
 import 'screens/request/request_detail_screen.dart';
@@ -12,10 +13,13 @@ import 'providers/auth_provider.dart';
 import 'providers/request_provider.dart';
 import 'providers/offer_provider.dart';
 import 'providers/location_provider.dart';
+import 'providers/chat_provider.dart';
+import 'providers/theme_provider.dart';
 import 'services/api_client_factory.dart';
 import 'services/auth_service.dart';
 import 'services/request_service.dart';
 import 'services/offer_service.dart';
+import 'services/api_service.dart';
 
 void main() {
   runApp(const GNGMApp());
@@ -30,28 +34,33 @@ class GNGMApp extends StatelessWidget {
     final authService = AuthService(apiClient);
     final requestService = RequestService(apiClient);
     final offerService = OfferService(apiClient);
+    final apiService = ApiService(apiClient);
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider(authService, apiClient)),
         ChangeNotifierProvider(create: (_) => RequestProvider(requestService)),
         ChangeNotifierProvider(create: (_) => OfferProvider(offerService)),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ChatProvider>(
+          create: (context) => ChatProvider(
+            apiService: apiService,
+            authProvider: context.read<AuthProvider>(),
+          ),
+          update: (context, authProvider, chatProvider) => chatProvider ?? ChatProvider(
+            apiService: apiService,
+            authProvider: authProvider,
+          ),
+        ),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) {
+      child: Consumer2<AuthProvider, ThemeProvider>(
+        builder: (context, authProvider, themeProvider, child) {
           return MaterialApp(
             title: 'GNGM',
-            theme: ThemeData(
-              primaryColor: AppColors.primary,
-              scaffoldBackgroundColor: AppColors.background,
-              fontFamily: 'Pretendard',
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: AppColors.primary,
-                brightness: Brightness.light,
-              ),
-              useMaterial3: true,
-            ),
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
             home: _getHomeWidget(authProvider),
             routes: {
               '/home': (context) => const HomeScreen(),
