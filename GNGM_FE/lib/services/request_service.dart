@@ -31,14 +31,20 @@ class RequestService {
     required double lat,
     required double lng,
     double radius = 5.0,
+    String? categoryType,
   }) async {
+    final queryParams = <String, dynamic>{
+      'lat': lat,
+      'lng': lng,
+      'radius': radius,
+    };
+    if (categoryType != null && categoryType != 'all') {
+      queryParams['categoryType'] = categoryType;
+    }
+    
     final response = await _apiClient.get<RequestListResponseDto>(
       '/requests/nearby',
-      queryParameters: {
-        'lat': lat,
-        'lng': lng,
-        'radius': radius,
-      },
+      queryParameters: queryParams,
       fromJson: (data) => RequestListResponseDto.fromJson(data),
     );
     

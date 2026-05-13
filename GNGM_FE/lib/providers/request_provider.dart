@@ -44,6 +44,7 @@ class RequestProvider with ChangeNotifier {
     required double lat,
     required double lng,
     double radius = 5.0,
+    String? categoryType,
   }) async {
     _setLoading(true);
     _clearError();
@@ -53,6 +54,7 @@ class RequestProvider with ChangeNotifier {
         lat: lat,
         lng: lng,
         radius: radius,
+        categoryType: categoryType,
       );
       
       if (response.success && response.data != null) {

@@ -35,7 +35,30 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Sunflower:wght@300;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Do+Hyeon&family=Sunflower:wght@300;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Force font override -->
+  <style>
+    *, *::before, *::after {
+      font-family: 'Jua', 'Do Hyeon', 'Sunflower', sans-serif !important;
+    }
+    
+    body, html {
+      font-family: 'Jua', 'Do Hyeon', 'Sunflower', sans-serif !important;
+    }
+    
+    input, textarea, button, label, span, div, p, h1, h2, h3, h4, h5, h6 {
+      font-family: 'Jua', 'Do Hyeon', 'Sunflower', sans-serif !important;
+    }
+    
+    .flt-scene-host {
+      font-family: 'Jua', 'Do Hyeon', 'Sunflower', sans-serif !important;
+    }
+    
+    flt-glass-pane {
+      font-family: 'Jua', 'Do Hyeon', 'Sunflower', sans-serif !important;
+    }
+  </style>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
