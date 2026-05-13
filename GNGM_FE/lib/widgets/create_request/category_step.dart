@@ -17,8 +17,8 @@ class CategoryStep extends StatelessWidget {
     final categories = [
       {'id': 'shopping', 'name': '쇼핑', 'icon': Icons.shopping_bag_outlined, 'color': AppColors.primary},
       {'id': 'delivery', 'name': '배송', 'icon': Icons.delivery_dining_outlined, 'color': AppColors.primaryLight},
-      {'id': 'transport', 'name': '동행', 'icon': Icons.directions_car_outlined, 'color': AppColors.success},
-      {'id': 'companion', 'name': '기타', 'icon': Icons.handshake_outlined, 'color': AppColors.warning},
+      {'id': 'transport', 'name': '동행', 'icon': Icons.directions_car_outlined, 'color': AppColors.primaryDark},
+      {'id': 'companion', 'name': '기타', 'icon': Icons.handshake_outlined, 'color': AppColors.success},
     ];
 
     return Padding(

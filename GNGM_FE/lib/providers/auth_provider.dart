@@ -12,11 +12,13 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   bool _isInitializing = true; // 앱 시작시 인증 상태 확인 중인지
   String? _error;
+  String? _token;
 
   User? get user => _user;
   bool get isLoading => _isLoading;
   bool get isInitializing => _isInitializing; // 초기화 중인지 여부
   String? get error => _error;
+  String? get token => _token;
   bool get isAuthenticated => _user != null;
   bool get isLoggedIn => !_isInitializing && _user != null;
 
@@ -31,6 +33,7 @@ class AuthProvider with ChangeNotifier {
       final token = prefs.getString('auth_token');
 
       if (token != null) {
+        _token = token;
         _apiClient.setAuthToken(token);
         await getCurrentUser();
       }
@@ -59,6 +62,7 @@ class AuthProvider with ChangeNotifier {
         // 웹과 모바일 모두 토큰 저장 (accessToken 사용)
         final accessToken = response.data!.tokens.accessToken;
         await _saveToken(accessToken);
+        _token = accessToken;
         _apiClient.setAuthToken(accessToken);
         _user = response.data!.user;
         notifyListeners();
@@ -96,6 +100,7 @@ class AuthProvider with ChangeNotifier {
         // 웹과 모바일 모두 토큰 저장 (accessToken 사용)
         final accessToken = response.data!.tokens.accessToken;
         await _saveToken(accessToken);
+        _token = accessToken;
         _apiClient.setAuthToken(accessToken);
         _user = response.data!.user;
         notifyListeners();
@@ -172,6 +177,7 @@ class AuthProvider with ChangeNotifier {
 
     // 웹과 모바일 모두 토큰 클리어
     await _clearToken();
+    _token = null;
     _apiClient.clearAuthToken();
 
     _user = null;

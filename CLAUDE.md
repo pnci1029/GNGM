@@ -74,17 +74,18 @@ class AuthResponseDto {
 
 ## 컬러 시스템
 
-### 모노크로매틱 코랄 핑크 톤 (Soft Coral Pink Palette)
+### 모노크로매틱 코랄 핑크 톤 (Soft Coral Pink Palette) - 단일 브랜딩
 ```css
-/* 메인 브랜드 컬러 */
+/* 메인 브랜드 컬러 - 코랄 핑크 계열로 완전 통일 */
 --primary: #FF6F91;           /* 메인 브랜드 - 헤더, 로고, 주요 버튼 (코랄 핑크) */
 --primary-light: #FF8FA3;     /* 밝은 톤 - 호버 상태, 강조 */
 --primary-dark: #E91E63;      /* 어두운 톤 - 눌림 상태, 그림자 */
 --primary-pale: #FFF0F3;      /* 연한 톤 - 배경, 하이라이트 */
 --primary-subtle: #FFCDD2;    /* 미묘한 톤 - 구분선, 보조 배경 */
 
-/* 보조 컬러 */
---success-green: #4CAF50;     /* 성공, 완료 상태 */
+/* 상태 컬러 - 핑크 계열 기반 */
+--success-pink: #FF8FA3;      /* 성공, 완료 상태 (밝은 핑크 사용) */
+--success-light: #FFCDD2;     /* 성공 배경 (연한 핑크) */
 --warning-amber: #FF9800;     /* 주의, 대기 상태 */
 --error-red: #F44336;         /* 에러, 경고 상태 */
 
@@ -97,12 +98,13 @@ class AuthResponseDto {
 --gray-900: #212121;         /* 메인 텍스트 */
 ```
 
-### 컬러 사용 원칙
-- **모노크로매틱 시스템**: 코랄 핑크 계열로 통일된 브랜드 아이덴티티
+### 컬러 사용 원칙 (핑크 단일 브랜딩 정책)
+- **완전 모노크로매틱**: 코랄 핑크 계열로 완전히 통일된 브랜드 아이덴티티
+- **핑크 기반 상태 표시**: 성공/완료도 핑크 계열 사용 (초록색 사용 금지)
 - **따뜻하고 감성적**: 친근하면서도 세련된 감성적 톤
-- **독창적 브랜딩**: 기존 앱들과 차별화된 고유한 색감
+- **독창적 브랜딩**: 기존 앱들과 차별화된 고유한 색감  
 - **명확한 위계**: Primary > Primary Light > Primary Dark 순서로 중요도 표현
-- **상태 구분**: 기능별 색상으로 사용자 경험 향상 (성공=그린, 경고=앰버, 에러=레드)
+- **상태 구분**: 성공=밝은핑크, 주의=앰버, 에러=레드 (초록 계열 완전 배제)
 
 ## UI 레이아웃 구조
 
@@ -129,40 +131,62 @@ class AuthResponseDto {
 
 ## 타이포그래피
 
-### 폰트 시스템
-```css
-/* 시그니처 폰트 (브랜드용) */
-font-family-signature: 'GmarketSansMedium', 'Pretendard', sans-serif;
+### 폰트 시스템 (Do Hyeon 폰트 적용)
+GNGM 프로젝트는 전역적으로 **Do Hyeon** 폰트를 사용합니다.
 
-/* 기본 폰트 (가독성 우선) */
-font-family-base: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+#### 기술 구현
+```dart
+// main.dart에서 전역 폰트 설정
+MaterialApp(
+  theme: AppTheme.lightTheme.copyWith(
+    textTheme: GoogleFonts.doHyeonTextTheme(AppTheme.lightTheme.textTheme),
+  ),
+  darkTheme: AppTheme.darkTheme.copyWith(
+    textTheme: GoogleFonts.doHyeonTextTheme(AppTheme.darkTheme.textTheme),
+  ),
+)
 
-/* 크기 체계 */
---text-brand: 28px;   /* 브랜드 로고, 타이틀 (향수체) */
---text-xl: 24px;      /* 주요 제목 */
---text-lg: 18px;      /* 서브타이틀 */
---text-md: 16px;      /* 본문 */
---text-sm: 14px;      /* 보조 정보 */
---text-xs: 12px;      /* 캡션 */
-
-/* 폰트 가중치 */
---font-bold: 700;     /* 제목, 강조 */
---font-semibold: 600; /* 버튼, 라벨 */
---font-medium: 500;   /* 중요 텍스트 */
---font-regular: 400;  /* 기본 텍스트 */
+// AppTextStyles 사용법
+class AppTextStyles {
+  static TextStyle get brandTitle => GoogleFonts.doHyeon(fontSize: 28, color: AppColors.primary);
+  static TextStyle get title => GoogleFonts.doHyeon(fontSize: 20, color: AppColors.textPrimary);
+  static TextStyle get subtitle => GoogleFonts.doHyeon(fontSize: 16, color: AppColors.textPrimary);
+  static TextStyle get body => GoogleFonts.doHyeon(fontSize: 14, color: AppColors.textPrimary);
+  static TextStyle get bodySmall => GoogleFonts.doHyeon(fontSize: 12, color: AppColors.textPrimary);
+  static TextStyle get caption => GoogleFonts.doHyeon(fontSize: 12, color: AppColors.textSecondary);
+  static TextStyle get button => GoogleFonts.doHyeon(fontSize: 16, color: AppColors.white);
+}
 ```
 
-### 폰트 적용 전략
-- **브랜드 아이덴티티**: 'GNGM' 로고, 메인 타이틀에 지마켓 산스 사용
-- **가독성 우선**: 본문, 버튼, 메뉴는 Pretendard 사용  
-- **모던한 포인트**: 서비스 제목, 가격 표시에 지마켓 산스 선택적 적용
-- **일관성 유지**: 같은 성격의 텍스트는 동일한 폰트 적용
+#### 폰트 사용 가이드라인
+1. **전역 적용**: 모든 화면에서 Do Hyeon 폰트 사용
+2. **FontWeight 사용 금지**: Do Hyeon은 기본적으로 적당한 두께를 가지므로 FontWeight.w600, FontWeight.bold 등 추가 설정하지 않음
+3. **크기별 용도**:
+   - **28px**: 브랜드 로고, 메인 타이틀
+   - **20px**: 화면 제목, 섹션 헤더
+   - **16px**: 서브타이틀, 버튼 텍스트
+   - **14px**: 본문 텍스트
+   - **12px**: 캡션, 보조 정보
 
-### 폰트 사용 원칙
-- **모던한 감성**: 지마켓 산스로 트렌디하고 깔끔한 브랜드 느낌
-- **명확한 위계**: 폰트 크기와 굵기로 정보 구조 표현
-- **최적 가독성**: 모바일 환경에서 14px 이상 보장
-- **한국적 감각**: K-브랜드 감성을 담은 독특한 타이포그래피
+#### 개발자 사용법
+```dart
+// 올바른 사용법
+Text('제목', style: AppTextStyles.title)
+Text('본문', style: AppTextStyles.body)
+Text('캡션', style: AppTextStyles.caption)
+
+// 직접 사용하는 경우
+Text('커스텀 텍스트', style: GoogleFonts.doHyeon(fontSize: 18, color: AppColors.primary))
+
+// 금지 사항 - FontWeight 사용하지 말 것
+Text('잘못된 예', style: GoogleFonts.doHyeon(fontSize: 16, fontWeight: FontWeight.bold)) // ❌
+```
+
+### 폰트 특성
+- **Do Hyeon**: 귀엽고 둥근 한국어 전용 폰트
+- **웹 안정성**: Google Fonts를 통해 안정적인 웹 로딩
+- **한국적 감성**: 친근하고 따뜻한 브랜드 이미지 구현
+- **가독성**: 모바일 환경에서 우수한 가독성 제공
 
 ## 아이콘 & 일러스트
 
