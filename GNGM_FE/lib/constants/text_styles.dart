@@ -1,60 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'colors.dart';
 
 class AppTextStyles {
   // Brand title (큰 브랜드 제목)
-  static const TextStyle brandTitle = TextStyle(
+  static TextStyle get brandTitle => GoogleFonts.doHyeon(
     fontSize: 28,
-    fontWeight: FontWeight.bold,
     color: AppColors.primary,
-    fontFamily: 'Pretendard',
   );
 
   // Main title (제목)
-  static const TextStyle title = TextStyle(
+  static TextStyle get title => GoogleFonts.doHyeon(
     fontSize: 20,
-    fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
-    fontFamily: 'Pretendard',
   );
 
   // Subtitle (부제목)
-  static const TextStyle subtitle = TextStyle(
+  static TextStyle get subtitle => GoogleFonts.doHyeon(
     fontSize: 16,
-    fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
-    fontFamily: 'Pretendard',
   );
 
   // Body text (본문)
-  static const TextStyle body = TextStyle(
+  static TextStyle get body => GoogleFonts.doHyeon(
     fontSize: 14,
-    fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
-    fontFamily: 'Pretendard',
   );
 
   // Small body text (작은 본문)
-  static const TextStyle bodySmall = TextStyle(
+  static TextStyle get bodySmall => GoogleFonts.doHyeon(
     fontSize: 12,
-    fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
-    fontFamily: 'Pretendard',
   );
 
   // Caption (캡션)
-  static const TextStyle caption = TextStyle(
+  static TextStyle get caption => GoogleFonts.doHyeon(
     fontSize: 12,
-    fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
-    fontFamily: 'Pretendard',
   );
 
   // Button text
-  static const TextStyle button = TextStyle(
+  static TextStyle get button => GoogleFonts.doHyeon(
     fontSize: 16,
-    fontWeight: FontWeight.w600,
     color: AppColors.white,
-    fontFamily: 'Pretendard',
   );
 }

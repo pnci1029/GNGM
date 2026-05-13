@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'constants/colors.dart';
 import 'constants/text_styles.dart';
 import 'constants/theme_data.dart';
@@ -58,8 +59,12 @@ class GNGMApp extends StatelessWidget {
         builder: (context, authProvider, themeProvider, child) {
           return MaterialApp(
             title: 'GNGM',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            theme: AppTheme.lightTheme.copyWith(
+              textTheme: GoogleFonts.doHyeonTextTheme(AppTheme.lightTheme.textTheme),
+            ),
+            darkTheme: AppTheme.darkTheme.copyWith(
+              textTheme: GoogleFonts.doHyeonTextTheme(AppTheme.darkTheme.textTheme),
+            ),
             themeMode: themeProvider.themeMode,
             home: _getHomeWidget(authProvider),
             routes: {
